@@ -2,13 +2,13 @@
  * This file contains functions for managing application settings.
  * Settings are persisted in <Application Data>/settings.json and are used by both the UI and the backend.
  *
- * @module appSettings
+ * TODO: Rewrite this to be an injectable object so we don't need `storeInstance`.
  */
 
+import { createStore } from '@tauri-apps/plugin-store';
 import { writable, type Writable } from 'svelte/store';
-import { Store } from 'tauri-plugin-store-api';
 
-const store = new Store('settings.json');
+const store = createStore('settings.json', { autoSave: true });
 
 /**
  * Persisted confirmation that user has confirmed their analytics settings.
@@ -46,8 +46,9 @@ export function appNonAnonMetricsEnabled() {
 
 function persisted<T>(initial: T, key: string): Writable<T> & { onDisk: () => Promise<T> } {
 	async function setAndPersist(value: T, set: (value: T) => void) {
-		await store.set(key, value);
-		await store.save();
+		const storeInstance = await store;
+		await storeInstance.set(key, value);
+		await storeInstance.save();
 
 		set(value);
 	}
@@ -84,13 +85,14 @@ function persisted<T>(initial: T, key: string): Writable<T> & { onDisk: () => Pr
 }
 
 async function storeValueWithDefault<T>(initial: T, key: string): Promise<T> {
+	const storeInstance = await store;
 	try {
-		await store.load();
+		await storeInstance.load();
 	} catch (e) {
 		// If file does not exist, reset it
-		store.reset();
+		storeInstance.reset();
 	}
-	const stored = (await store.get(key)) as T;
+	const stored = (await storeInstance.get(key)) as T;
 
 	if (stored === null) {
 		return initial;

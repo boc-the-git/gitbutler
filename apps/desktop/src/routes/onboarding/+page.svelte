@@ -13,6 +13,6 @@
 	{#if $analyticsConfirmed}
 		<Welcome />
 	{:else}
-		<AnalyticsConfirmation {analyticsConfirmed} />
+		<AnalyticsConfirmation />
 	{/if}
 </DecorativeSplitView>
