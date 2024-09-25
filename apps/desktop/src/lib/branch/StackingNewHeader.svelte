@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { Project } from '$lib/backend/projects';
+	import { projectShowStackingCardDetails } from '$lib/config/config';
 	import Link from '$lib/shared/Link.svelte';
 	import Spacer from '$lib/shared/Spacer.svelte';
+	import { getContext } from '$lib/utils/context';
 	import Button from '@gitbutler/ui/Button.svelte';
 	import Icon from '@gitbutler/ui/Icon.svelte';
 	import type { Commit, DetailedCommit } from '$lib/vbranches/types';
@@ -10,20 +13,22 @@
 	}
 
 	const { addBranch }: Props = $props();
+	const project = getContext(Project);
+
+	const showStackingCardDetails = projectShowStackingCardDetails(project.id);
+	let showDetails = $state($showStackingCardDetails);
 
 	function closeStackingCard() {
-		// 1. Hide card
-		// 2. Set cookie to avoid showing details again
+		showStackingCardDetails.set(false);
+		showDetails = false;
 	}
-
-	const showDetails = $state(true);
 </script>
 
 <section class="card">
-	<button tabindex="0" class="card__close" onclick={closeStackingCard}>
-		<Icon name="cross-small" />
-	</button>
 	{#if showDetails}
+		<button tabindex="0" class="card__close" onclick={closeStackingCard}>
+			<Icon name="cross-small" />
+		</button>
 		<div class="card__body">
 			<h2 class="text-16 text-bold">New branch stacking</h2>
 			<p class="text-12 card__description">
@@ -32,9 +37,9 @@
 				<Link href="https://docs.gitbutler.com/stacking" target="_blank">Read more</Link>
 			</p>
 		</div>
+		<Spacer />
 	{/if}
-	<Spacer />
-	<section class="card__action">
+	<section class="card__action" class:showDetails={!showDetails}>
 		<div class="card__action--left">
 			<div class="card__action--icon">
 				<Icon name="plus-small" />
@@ -58,8 +63,8 @@
 
 	.card__close {
 		position: absolute;
-		top: 4px;
-		right: 4px;
+		top: 8px;
+		right: 8px;
 
 		color: var(--clr-scale-ntrl-60);
 	}
@@ -76,6 +81,10 @@
 		align-items: flex-start;
 		padding: 0 13px;
 		gap: 1rem;
+
+		&.showDetails {
+			margin-top: 16px;
+		}
 	}
 
 	.card__action--left {
