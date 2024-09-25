@@ -1,7 +1,9 @@
 <script lang="ts">
 	import BranchCard from './BranchCard.svelte';
+	import { default as StackingBranchCard } from './StackingBranchCard.svelte';
 	import { Project } from '$lib/backend/projects';
 	import { projectLaneCollapsed } from '$lib/config/config';
+	import { stackingFeature } from '$lib/config/uiFeatureFlags';
 	import FileCard from '$lib/file/FileCard.svelte';
 	import { getGitHost } from '$lib/gitHost/interface/gitHost';
 	import { createGitHostChecksMonitorStore } from '$lib/gitHost/interface/gitHostChecksMonitor';
@@ -109,7 +111,11 @@
 </script>
 
 <div class="wrapper" data-tauri-drag-region>
-	<BranchCard {commitBoxOpen} {isLaneCollapsed} />
+	{#if $stackingFeature}
+		<StackingBranchCard {commitBoxOpen} {isLaneCollapsed} />
+	{:else}
+		<BranchCard {commitBoxOpen} {isLaneCollapsed} />
+	{/if}
 
 	{#if selected}
 		<div
