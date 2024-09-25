@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BranchCard from './BranchCard.svelte';
-	import { default as StackingBranchCard } from './StackingBranchCard.svelte';
+	import { default as StackingBranchCard } from './StackingLane.svelte';
 	import { Project } from '$lib/backend/projects';
 	import { projectLaneCollapsed } from '$lib/config/config';
 	import { stackingFeature } from '$lib/config/uiFeatureFlags';

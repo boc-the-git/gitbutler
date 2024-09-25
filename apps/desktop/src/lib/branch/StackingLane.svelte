@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BranchHeader from './BranchHeader.svelte';
-	import StackingBranchHeader from './StackingBranchHeader.svelte';
+	import StackingLaneBranches from './StackingLaneBranches.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
 	import PullRequestCard from '../pr/PullRequestCard.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
@@ -11,7 +11,6 @@
 	import { Project } from '$lib/backend/projects';
 	import Dropzones from '$lib/branch/Dropzones.svelte';
 	import CommitDialog from '$lib/commit/CommitDialog.svelte';
-	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
 	import { projectAiGenEnabled } from '$lib/config/config';
 	import { stackingFeature } from '$lib/config/uiFeatureFlags';
 	import BranchFiles from '$lib/file/BranchFiles.svelte';
@@ -24,10 +23,10 @@
 	import ScrollableContainer from '$lib/scroll/ScrollableContainer.svelte';
 	import { SETTINGS, type Settings } from '$lib/settings/userSettings';
 	import Resizer from '$lib/shared/Resizer.svelte';
+	import Spacer from '$lib/shared/Spacer.svelte';
 	import { User } from '$lib/stores/user';
 	import { getContext, getContextStore, getContextStoreBySymbol } from '$lib/utils/context';
 	import { BranchController } from '$lib/vbranches/branchController';
-	import { groupCommitsByRef } from '$lib/vbranches/commitGroups';
 	import {
 		getIntegratedCommits,
 		getLocalAndRemoteCommits,
@@ -221,14 +220,17 @@
 								</div>
 							</Dropzones>
 						{/if}
-
-						{#snippet pushButton({disabled}: {disabled: boolean})}
+						<Spacer dotted />
+						<div class="lane-branches">
+							<StackingLaneBranches branches={[branch]} />
+						</div>
+						<div class="lane-branches__action">
 							<Button
 								style="pop"
 								kind="solid"
 								wide
 								loading={isPushingCommits}
-								{disabled}
+								disabled={localCommitsConflicted || localAndRemoteCommitsConflicted}
 								tooltip={localCommitsConflicted
 									? 'In order to push, please resolve any conflicted commits.'
 									: undefined}
@@ -236,30 +238,10 @@
 							>
 								{branch.requiresForce ? 'Force push' : 'Push'}
 							</Button>
-						{/snippet}
-						{#each groupCommitsByRef(branch.commits) as group (group.ref)}
-							<div class="commit-group" class:stacking={$stackingFeature}>
-								{#if group.branchName}
-									<StackingBranchHeader upstreamName={group.branchName} />
-									<PullRequestCard upstreamName={group.branchName} />
-								{/if}
-								<StackingCommitList
-									localCommits={group.localCommits}
-									localAndRemoteCommits={group.remoteCommits}
-									integratedCommits={group.integratedCommits}
-									remoteCommits={[]}
-									isUnapplied={false}
-									{localCommitsConflicted}
-									{localAndRemoteCommitsConflicted}
-								/>
-							</div>
-						{/each}
-						{@render pushButton({
-							disabled: localCommitsConflicted || localAndRemoteCommitsConflicted
-						})}
+						</div>
 					</div>
-				</div>
-			</ScrollableContainer>
+				</div></ScrollableContainer
+			>
 			<div class="divider-line">
 				<Resizer
 					viewport={rsViewport}
@@ -292,6 +274,18 @@
 		overflow-y: scroll;
 	}
 
+	.lane-branches {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.lane-branches__action {
+		z-index: var(--z-lifted);
+		position: sticky;
+		bottom: 0;
+	}
+
 	.divider-line {
 		z-index: var(--z-lifted);
 		position: absolute;
@@ -309,7 +303,6 @@
 		padding: 12px;
 	}
 
-	/* Stacking */
 	.card-stacking {
 		flex: 1;
 		display: flex;
@@ -320,9 +313,7 @@
 	.no-changes.card,
 	.new-branch.card {
 		border-radius: 0 0 var(--radius-m) var(--radius-m) !important;
-		margin-bottom: 10px;
 	}
-	/* End Stacking */
 
 	.branch-card__files {
 		display: flex;
@@ -366,17 +357,5 @@
 		width: 1px;
 		height: 100%;
 		background-color: var(--clr-border-2);
-	}
-
-	.commit-group {
-		margin: 10px 0;
-		border: 1px solid var(--clr-border-2);
-		border-radius: var(--radius-m);
-		background: var(--clr-bg-1);
-		overflow: hidden;
-
-		&.stacking {
-			margin-top: 0px;
-		}
 	}
 </style>
