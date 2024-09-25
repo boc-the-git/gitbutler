@@ -2,10 +2,13 @@
 	import StackingBranchHeader from './StackingBranchHeader.svelte';
 	import StackingNewHeader from './StackingNewHeader.svelte';
 	import PullRequestCard from '../pr/PullRequestCard.svelte';
+	import { BaseBranch } from '$lib/baseBranch/baseBranch';
 	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
+	import { getContextStore } from '$lib/utils/context';
 	import { groupCommitsByRef } from '$lib/vbranches/commitGroups';
 	import { getLocalAndRemoteCommits, getLocalCommits } from '$lib/vbranches/contexts';
-	import { VirtualBranch } from '$lib/vbranches/types';
+	import { Commit, DetailedCommit, VirtualBranch } from '$lib/vbranches/types';
+	import Modal from '@gitbutler/ui/Modal.svelte';
 
 	interface Props {
 		branches: VirtualBranch[];
@@ -20,9 +23,18 @@
 	const localAndRemoteCommitsConflicted = $derived(
 		$localAndRemoteCommits.some((commit) => commit.conflicted)
 	);
+
+	const baseBranch = getContextStore(BaseBranch);
+	let createRefModal: Modal;
+	let createRefName = $state($baseBranch.remoteName + '/');
+
+	function openCreateRefModal(e: Event, commit: DetailedCommit | Commit) {
+		e.stopPropagation();
+		createRefModal.show(commit);
+	}
 </script>
 
-<StackingNewHeader />
+<StackingNewHeader addBranch={openCreateRefModal} />
 {#each branches as branch}
 	{#each groupCommitsByRef(branch.commits) as group (group.ref)}
 		<div class="commit-group">
