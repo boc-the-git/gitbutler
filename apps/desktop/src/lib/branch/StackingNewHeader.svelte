@@ -1,4 +1,5 @@
 <script lang="ts">
+	import StackingStatusIcon from './StackingStatusIcon.svelte';
 	import { Project } from '$lib/backend/projects';
 	import { projectShowStackingCardDetails } from '$lib/config/config';
 	import Link from '$lib/shared/Link.svelte';
@@ -40,12 +41,7 @@
 		<Spacer />
 	{/if}
 	<section class="card__action" class:showDetails={!showDetails}>
-		<div class="card__action--left">
-			<div class="card__action--icon">
-				<Icon name="plus-small" />
-			</div>
-			<div class="card__action--bar"></div>
-		</div>
+		<StackingStatusIcon icon="plus-small" color="neutral" gap={true} />
 		<Button grow style="neutral" onclick={addBranch}>Add a branch to the stack</Button>
 	</section>
 </section>
@@ -84,28 +80,6 @@
 
 		&.showDetails {
 			margin-top: 16px;
-		}
-	}
-
-	.card__action--left {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 0.25rem;
-
-		& .card__action--icon {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 20px;
-			height: 28px;
-			border-radius: 30%;
-			background-color: var(--clr-scale-ntrl-80);
-		}
-		& .card__action--bar {
-			height: 10px;
-			border: 1px solid var(--clr-border-3);
 		}
 	}
 </style>

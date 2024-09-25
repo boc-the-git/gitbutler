@@ -25,6 +25,7 @@ class CommitGroup {
 }
 
 export function groupCommitsByRef(arr: DetailedCommit[]): CommitGroup[] {
+	console.log('GROUP_COMMITS_BY_REF', arr);
 	const groups: CommitGroup[] = [];
 	let currentGroup: CommitGroup | undefined;
 

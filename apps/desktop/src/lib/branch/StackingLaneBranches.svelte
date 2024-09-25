@@ -26,21 +26,22 @@
 
 	const baseBranch = getContextStore(BaseBranch);
 	let createRefModal: Modal;
-	let createRefName = $state($baseBranch.remoteName + '/');
+	console.log('BASE.BRANCH', $baseBranch);
 
 	function openCreateRefModal(e: Event, commit: DetailedCommit | Commit) {
 		e.stopPropagation();
 		createRefModal.show(commit);
 	}
+	console.log('groupCmmitsByRef', groupCommitsByRef(branches[0]?.commits ?? []));
 </script>
 
 <StackingNewHeader addBranch={openCreateRefModal} />
 {#each branches as branch}
 	{#each groupCommitsByRef(branch.commits) as group (group.ref)}
 		<div class="commit-group">
-			{#if group.branchName}
-				<StackingBranchHeader upstreamName={group.branchName} />
-				<PullRequestCard upstreamName={group.branchName} />
+			{#if branch.name}
+				<StackingBranchHeader upstreamName={branch.name} />
+				<PullRequestCard upstreamName={branch.name} />
 			{/if}
 			<StackingCommitList
 				localCommits={group.localCommits}
