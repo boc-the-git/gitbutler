@@ -2,7 +2,6 @@
 	import BranchHeader from './BranchHeader.svelte';
 	import StackingLaneBranches from './StackingLaneBranches.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
-	import PullRequestCard from '../pr/PullRequestCard.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
 	import { PromptService } from '$lib/ai/promptService';
 	import { AIService } from '$lib/ai/service';
@@ -12,7 +11,6 @@
 	import Dropzones from '$lib/branch/Dropzones.svelte';
 	import CommitDialog from '$lib/commit/CommitDialog.svelte';
 	import { projectAiGenEnabled } from '$lib/config/config';
-	import { stackingFeature } from '$lib/config/uiFeatureFlags';
 	import BranchFiles from '$lib/file/BranchFiles.svelte';
 	import { getGitHostChecksMonitor } from '$lib/gitHost/interface/gitHostChecksMonitor';
 	import { getGitHostListingService } from '$lib/gitHost/interface/gitHostListingService';
@@ -160,9 +158,6 @@
 					data-tauri-drag-region
 				>
 					<BranchHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
-					{#if !$stackingFeature && branch.upstream?.givenName}
-						<PullRequestCard upstreamName={branch.upstream.givenName} />
-					{/if}
 					<div class="card-stacking">
 						{#if branch.files?.length > 0}
 							<div class="branch-card__files card">
