@@ -1,7 +1,6 @@
 <script lang="ts">
 	import StackingBranchHeader from './StackingBranchHeader.svelte';
 	import StackingNewStackCard from './StackingNewStackCard.svelte';
-	import StackingPullRequestHeader from '../pr/StackingPullRequestHeader.svelte';
 	import { BaseBranch } from '$lib/baseBranch/baseBranch';
 	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
 	import { getContextStore } from '$lib/utils/context';
@@ -42,7 +41,6 @@
 		<div class="commit-group">
 			{#if branch.name}
 				<StackingBranchHeader upstreamName={branch.name} />
-				<StackingPullRequestHeader upstreamName={branch.name} />
 			{/if}
 			<StackingCommitList
 				localCommits={group.localCommits}
