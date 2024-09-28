@@ -39,7 +39,7 @@
 		</div>
 		<div class="branch-info__btns">
 			<!-- TODO: Replace 'list-view' icon -->
-			<Button icon="list-view" outline type="ghost" color="neutral" />
+			<Button icon="description" outline type="ghost" color="neutral" />
 			<Button icon="edit-text" outline type="ghost" color="neutral" />
 		</div>
 	</div>
