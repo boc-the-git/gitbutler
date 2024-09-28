@@ -62,9 +62,10 @@
 			? [...remoteCommits.map(transformAnyCommit), { id: LineSpacer.Remote }]
 			: []
 	);
-
 	const mappedLocalCommits = $derived(
-		localCommits.length > 0 ? localCommits.map(transformAnyCommit) : []
+		localCommits.length > 0
+			? [...localCommits.map(transformAnyCommit), { id: LineSpacer.Local }]
+			: []
 	);
 	const mappedLocalAndRemoteCommits = $derived(
 		localAndRemoteCommits.length > 0

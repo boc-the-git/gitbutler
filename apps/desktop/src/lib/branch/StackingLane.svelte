@@ -138,7 +138,6 @@
 			onGenerateBranchName={generateBranchName}
 			{isLaneCollapsed}
 		/>
-
 		<div class="collapsed-lane-divider" data-remove-from-draggable></div>
 	</div>
 {:else}
@@ -208,9 +207,9 @@
 							<Dropzones>
 								<div class="no-changes card">
 									<EmptyStatePlaceholder image={noChangesSvg} width="11rem" hasBottomMargin={false}>
-										<svelte:fragment slot="caption"
-											>No uncommitted changes on this branch</svelte:fragment
-										>
+										<svelte:fragment slot="caption">
+											No uncommitted changes on this branch
+										</svelte:fragment>
 									</EmptyStatePlaceholder>
 								</div>
 							</Dropzones>
