@@ -288,9 +288,8 @@
 		display: flex;
 		flex-direction: column;
 		background-color: var(--clr-bg-2);
-		border-radius: var(--radius-m);
+		border-radius: 0 0 var(--radius-m) var(--radius-m);
 		overflow: hidden;
-		border: 1px solid var(--clr-border-2);
 	}
 
 	.commits-group {
