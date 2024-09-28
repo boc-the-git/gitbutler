@@ -23,9 +23,9 @@
 		$localAndRemoteCommits.some((commit) => commit.conflicted)
 	);
 
-	const baseBranch = getContextStore(BaseBranch);
+	const _baseBranch = getContextStore(BaseBranch);
 	let createRefModal: Modal;
-	console.log('BASE.BRANCH', $baseBranch);
+	// console.log('BASE.BRANCH', $baseBranch);
 
 	function openCreateRefModal(e: Event, commit: DetailedCommit | Commit) {
 		e.stopPropagation();
@@ -39,9 +39,7 @@
 {#each branches as branch}
 	{#each groupCommitsByRef(branch.commits) as group (group.ref)}
 		<div class="commit-group">
-			{#if branch.name}
-				<StackingBranchHeader upstreamName={branch.name} />
-			{/if}
+			<StackingBranchHeader />
 			<StackingCommitList
 				localCommits={group.localCommits}
 				localAndRemoteCommits={group.remoteCommits}
@@ -57,7 +55,6 @@
 
 <style>
 	.commit-group {
-		margin-bottom: 10px;
 		border: 1px solid var(--clr-border-2);
 		border-radius: var(--radius-m);
 		background: var(--clr-bg-1);

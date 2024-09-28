@@ -63,8 +63,8 @@
 	let laneWidth: number | undefined = $state();
 
 	let commitDialog = $state<CommitDialog>();
-	let scrollViewport: HTMLElement | undefined = $state();
-	let rsViewport: HTMLElement | undefined = $state();
+	let scrollViewport = $state<HTMLElement>();
+	let rsViewport = $state<HTMLElement>();
 
 	$effect(() => {
 		if ($commitBoxOpen && branch.files.length === 0) {
@@ -218,6 +218,7 @@
 						<div class="lane-branches">
 							<StackingLaneBranches branches={[branch]} />
 						</div>
+						<!-- TODO: Sticky styling -->
 						<div class="lane-branches__action">
 							<Button
 								style="pop"
@@ -237,18 +238,20 @@
 				</div>
 			</ScrollableContainer>
 			<div class="divider-line">
-				<Resizer
-					viewport={rsViewport}
-					direction="right"
-					minWidth={380}
-					sticky
-					defaultLineColor={$fileIdSelection.length === 1 ? 'transparent' : 'var(--clr-border-2)'}
-					on:width={(e) => {
-						laneWidth = e.detail / (16 * $userSettings.zoom);
-						lscache.set(laneWidthKey + branch.id, laneWidth, 7 * 1440); // 7 day ttl
-						$defaultBranchWidthRem = laneWidth;
-					}}
-				/>
+				{#if rsViewport}
+					<Resizer
+						viewport={rsViewport}
+						direction="right"
+						minWidth={380}
+						sticky
+						defaultLineColor={$fileIdSelection.length === 1 ? 'transparent' : 'var(--clr-border-2)'}
+						on:width={(e) => {
+							laneWidth = e.detail / (16 * $userSettings.zoom);
+							lscache.set(laneWidthKey + branch.id, laneWidth, 7 * 1440); // 7 day ttl
+							$defaultBranchWidthRem = laneWidth;
+						}}
+					/>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -260,6 +263,7 @@
 		display: flex;
 		height: 100%;
 	}
+
 	.branch-card {
 		height: 100%;
 		position: relative;
@@ -271,13 +275,19 @@
 	.lane-branches {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+	}
+
+	:global(.lane-branches > *) {
+		margin-bottom: 12px;
 	}
 
 	.lane-branches__action {
 		z-index: var(--z-lifted);
 		position: sticky;
 		bottom: 0;
+		transition:
+			background-color 0.3s ease,
+			box-shadow 0.3s ease;
 	}
 
 	.divider-line {
