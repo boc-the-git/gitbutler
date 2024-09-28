@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BranchHeader from './BranchHeader.svelte';
-	import StackedBranchHeader from './StackedBranchHeader.svelte';
+	import StackingBranchHeader from './StackingBranchHeader.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
 	import PullRequestCard from '../pr/PullRequestCard.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
@@ -243,7 +243,7 @@
 							{#each groups as group (group.ref)}
 								<div class="commit-group" class:stacking={$stackingFeature}>
 									{#if group.branchName}
-										<StackedBranchHeader upstreamName={group.branchName} />
+										<StackingBranchHeader upstreamName={group.branchName} />
 										<PullRequestCard upstreamName={group.branchName} />
 									{/if}
 									<StackingCommitList
