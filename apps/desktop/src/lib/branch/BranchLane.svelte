@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BranchCard from './BranchCard.svelte';
-	import { default as StackingBranchCard } from './StackingLane.svelte';
+	import StackingLane from './StackingLane.svelte';
 	import { Project } from '$lib/backend/projects';
 	import { projectLaneCollapsed } from '$lib/config/config';
 	import { stackingFeature } from '$lib/config/uiFeatureFlags';
@@ -112,7 +112,7 @@
 
 <div class="wrapper" data-tauri-drag-region>
 	{#if $stackingFeature}
-		<StackingBranchCard {commitBoxOpen} {isLaneCollapsed} />
+		<StackingLane {commitBoxOpen} {isLaneCollapsed} />
 	{:else}
 		<BranchCard {commitBoxOpen} {isLaneCollapsed} />
 	{/if}

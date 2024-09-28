@@ -209,9 +209,9 @@
 						isLaneCollapsed={$isLaneCollapsed}
 					/>
 					{#if branch.selectedForChanges}
-						<Button style="pop" kind="soft" size="tag" clickable={false} icon="target"
-							>Default branch</Button
-						>
+						<Button style="pop" kind="soft" size="tag" clickable={false} icon="target">
+							Default branch
+						</Button>
 					{/if}
 				</div>
 			</div>
@@ -231,57 +231,17 @@
 
 				<div class="header__info">
 					<BranchLabel name={branch.name} onChange={(name) => handleBranchNameChange(name)} />
-					<div class="header__remote-branch">
-						<ActiveBranchStatus
-							{hasIntegratedCommits}
-							remoteExists={!!branch.upstream}
-							isLaneCollapsed={$isLaneCollapsed}
+					<span class="button-group">
+						<DefaultTargetButton
+							selectedForChanges={branch.selectedForChanges}
+							onclick={async () => {
+								isTargetBranchAnimated = true;
+								await branchController.setSelectedForChanges(branch.id);
+							}}
 						/>
-
-						{#await branch.isMergeable then isMergeable}
-							{#if !isMergeable}
-								<Button
-									size="tag"
-									clickable={false}
-									icon="locked-small"
-									style="warning"
-									tooltip="Applying this branch will add merge conflict markers that you will have to resolve"
-								>
-									Conflict
-								</Button>
-							{/if}
-						{/await}
-					</div>
-				</div>
-			</div>
-
-			<div class="header__actions">
-				<div class="header__buttons">
-					<DefaultTargetButton
-						selectedForChanges={branch.selectedForChanges}
-						onclick={async () => {
-							isTargetBranchAnimated = true;
-							await branchController.setSelectedForChanges(branch.id);
-						}}
-					/>
-				</div>
-
-				<div class="relative">
-					<div class="header__buttons">
-						{#if !$pr}
-							<PullRequestButton
-								click={async ({ draft }) => await createPr({ draft })}
-								disabled={branch.commits.length === 0 || !$gitHost || !$prService}
-								tooltip={!$gitHost || !$prService
-									? 'You can enable git host integration in the settings'
-									: ''}
-								loading={isLoading}
-							/>
-						{/if}
 						<Button
 							bind:el={meatballButtonEl}
 							style="ghost"
-							outline
 							icon="kebab"
 							onclick={() => {
 								contextMenu?.toggle();
@@ -293,7 +253,7 @@
 							onCollapse={collapseLane}
 							{onGenerateBranchName}
 						/>
-					</div>
+					</span>
 				</div>
 			</div>
 		</div>
@@ -304,19 +264,14 @@
 <style>
 	.header__wrapper {
 		z-index: var(--z-lifted);
-		position: sticky;
 		top: 12px;
-		padding-bottom: 8px;
-	}
-	.header__wrapper--stacking {
 		padding-bottom: unset !important;
-		position: unset;
-
-		& .header__info-wrapper .draggable {
+		& .draggable {
 			height: auto;
 		}
 	}
-	.header_card--stacking {
+
+	.header.card {
 		border-bottom-right-radius: 0px;
 		border-bottom-left-radius: 0px;
 		border-bottom-width: 0px;
@@ -375,14 +330,6 @@
 	.header__info {
 		flex: 1;
 		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-		gap: 10px;
-	}
-	/* TODO: Remove me after stacking feature toggle has been removed. */
-	.stacking-header__info {
-		flex: 1;
-		display: flex;
 		overflow: hidden;
 		justify-content: space-between;
 		align-items: center;
@@ -393,22 +340,7 @@
 		align-items: center;
 		gap: 10px;
 	}
-	.header__actions {
-		display: flex;
-		gap: 4px;
-		background: var(--clr-bg-1);
-		border-top: 1px solid var(--clr-border-2);
-		padding: 14px;
-		justify-content: space-between;
-		border-radius: 0 0 var(--radius-m) var(--radius-m);
-		user-select: none;
-	}
 
-	.header__buttons {
-		display: flex;
-		position: relative;
-		gap: 4px;
-	}
 	.draggable {
 		display: flex;
 		height: fit-content;
@@ -421,18 +353,6 @@
 		&:hover {
 			color: var(--clr-scale-ntrl-40);
 		}
-	}
-
-	.header__remote-branch {
-		color: var(--clr-scale-ntrl-50);
-		padding-left: 2px;
-		padding-right: 2px;
-		display: flex;
-		gap: 4px;
-		text-overflow: ellipsis;
-		overflow-x: hidden;
-		white-space: nowrap;
-		align-items: center;
 	}
 
 	/*  COLLAPSIBLE LANE */

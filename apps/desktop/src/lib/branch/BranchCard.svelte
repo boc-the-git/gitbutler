@@ -1,6 +1,5 @@
 <script lang="ts">
 	import BranchHeader from './BranchHeader.svelte';
-	import StackingBranchHeader from './StackingBranchHeader.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
 	import PullRequestCard from '../pr/PullRequestCard.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
@@ -12,9 +11,7 @@
 	import Dropzones from '$lib/branch/Dropzones.svelte';
 	import CommitDialog from '$lib/commit/CommitDialog.svelte';
 	import CommitList from '$lib/commit/CommitList.svelte';
-	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
 	import { projectAiGenEnabled } from '$lib/config/config';
-	import { stackingFeature } from '$lib/config/uiFeatureFlags';
 	import BranchFiles from '$lib/file/BranchFiles.svelte';
 	import { getGitHostChecksMonitor } from '$lib/gitHost/interface/gitHostChecksMonitor';
 	import { getGitHostListingService } from '$lib/gitHost/interface/gitHostListingService';
@@ -28,7 +25,6 @@
 	import { User } from '$lib/stores/user';
 	import { getContext, getContextStore, getContextStoreBySymbol } from '$lib/utils/context';
 	import { BranchController } from '$lib/vbranches/branchController';
-	import { groupCommitsByRef } from '$lib/vbranches/commitGroups';
 	import {
 		getIntegratedCommits,
 		getLocalAndRemoteCommits,
@@ -162,12 +158,12 @@
 					data-tauri-drag-region
 				>
 					<BranchHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
-					{#if !$stackingFeature && branch.upstream?.givenName}
+					{#if branch.upstream?.givenName}
 						<PullRequestCard upstreamName={branch.upstream.givenName} />
 					{/if}
-					<div class:card-no-stacking={!$stackingFeature} class:card-stacking={$stackingFeature}>
+					<div class="branch-card__files-wrapper">
 						{#if branch.files?.length > 0}
-							<div class="branch-card__files" class:card={$stackingFeature}>
+							<div class="branch-card__files">
 								<Dropzones>
 									<BranchFiles
 										isUnapplied={false}
@@ -202,7 +198,7 @@
 							</div>
 						{:else if branch.commits.length === 0}
 							<Dropzones>
-								<div class="new-branch" class:card={$stackingFeature}>
+								<div class="new-branch">
 									<EmptyStatePlaceholder image={laneNewSvg} width="11rem">
 										<svelte:fragment slot="title">This is a new branch</svelte:fragment>
 										<svelte:fragment slot="caption">
@@ -213,7 +209,7 @@
 							</Dropzones>
 						{:else}
 							<Dropzones>
-								<div class="no-changes" class:card={$stackingFeature}>
+								<div class="no-changes">
 									<EmptyStatePlaceholder image={noChangesSvg} width="11rem" hasBottomMargin={false}>
 										<svelte:fragment slot="caption"
 											>No uncommitted changes on this branch</svelte:fragment
@@ -238,45 +234,16 @@
 								{branch.requiresForce ? 'Force push' : 'Push'}
 							</Button>
 						{/snippet}
-						{#if $stackingFeature}
-							{@const groups = groupCommitsByRef(branch.commits)}
-							{#each groups as group (group.ref)}
-								<div class="commit-group" class:stacking={$stackingFeature}>
-									{#if group.branchName}
-										<StackingBranchHeader upstreamName={group.branchName} />
-										<PullRequestCard upstreamName={group.branchName} />
-									{/if}
-									<StackingCommitList
-										localCommits={group.localCommits}
-										localAndRemoteCommits={group.remoteCommits}
-										integratedCommits={group.integratedCommits}
-										remoteCommits={[]}
-										isUnapplied={false}
-										{localCommitsConflicted}
-										{localAndRemoteCommitsConflicted}
-									/>
-								</div>
-							{/each}
-							{#if $integratedCommits.length === 0 && $localCommits.length > 0}
-								{@render pushButton({
-									disabled:
-										localCommitsConflicted ||
-										localAndRemoteCommitsConflicted ||
-										$localCommits.length === 0
-								})}
-							{/if}
-						{:else}
-							<CommitList
-								localCommits={$localCommits}
-								localAndRemoteCommits={$localAndRemoteCommits}
-								integratedCommits={$integratedCommits}
-								remoteCommits={$remoteCommits}
-								isUnapplied={false}
-								{localCommitsConflicted}
-								{localAndRemoteCommitsConflicted}
-								{pushButton}
-							/>
-						{/if}
+						<CommitList
+							localCommits={$localCommits}
+							localAndRemoteCommits={$localAndRemoteCommits}
+							integratedCommits={$integratedCommits}
+							remoteCommits={$remoteCommits}
+							isUnapplied={false}
+							{localCommitsConflicted}
+							{localAndRemoteCommitsConflicted}
+							{pushButton}
+						/>
 					</div>
 				</div>
 			</ScrollableContainer>
@@ -329,35 +296,6 @@
 		padding: 12px;
 	}
 
-	.branch-card__files.card,
-	.no-changes.card,
-	.new-branch.card {
-		border-radius: 0 0 var(--radius-m) var(--radius-m) !important;
-	}
-
-	/* Stacking */
-	.card-no-stacking {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		border: 1px solid var(--clr-border-2);
-		border-radius: var(--radius-m);
-		background: var(--clr-bg-1);
-	}
-
-	.card-stacking {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.commit-group {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
 	.branch-card__files {
 		display: flex;
 		flex-direction: column;
@@ -371,7 +309,7 @@
 		padding: 12px;
 	}
 
-	.card-no-stacking {
+	.branch-card__files-wrapper {
 		flex: 1;
 		display: flex;
 		flex-direction: column;

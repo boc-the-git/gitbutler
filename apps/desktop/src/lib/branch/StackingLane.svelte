@@ -1,6 +1,6 @@
 <script lang="ts">
-	import BranchHeader from './BranchHeader.svelte';
 	import StackingLaneBranches from './StackingLaneBranches.svelte';
+	import StackingLaneHeader from './StackingLaneHeader.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
 	import { PromptService } from '$lib/ai/promptService';
@@ -26,10 +26,10 @@
 	import { getContext, getContextStore, getContextStoreBySymbol } from '$lib/utils/context';
 	import { BranchController } from '$lib/vbranches/branchController';
 	import {
-		getIntegratedCommits,
+		// getIntegratedCommits,
 		getLocalAndRemoteCommits,
-		getLocalCommits,
-		getRemoteCommits
+		getLocalCommits
+		// getRemoteCommits
 	} from '$lib/vbranches/contexts';
 	import { FileIdSelection } from '$lib/vbranches/fileIdSelection';
 	import { VirtualBranch } from '$lib/vbranches/types';
@@ -105,8 +105,8 @@
 
 	const localCommits = getLocalCommits();
 	const localAndRemoteCommits = getLocalAndRemoteCommits();
-	const integratedCommits = getIntegratedCommits();
-	const remoteCommits = getRemoteCommits();
+	// const integratedCommits = getIntegratedCommits();
+	// const remoteCommits = getRemoteCommits();
 
 	let isPushingCommits = $state(false);
 	const localCommitsConflicted = $derived($localCommits.some((commit) => commit.conflicted));
@@ -133,7 +133,7 @@
 
 {#if $isLaneCollapsed}
 	<div class="collapsed-lane-container">
-		<BranchHeader
+		<StackingLaneHeader
 			uncommittedChanges={branch.files.length}
 			onGenerateBranchName={generateBranchName}
 			{isLaneCollapsed}
@@ -157,7 +157,7 @@
 					class="branch-card__contents"
 					data-tauri-drag-region
 				>
-					<BranchHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
+					<StackingLaneHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
 					<div class="card-stacking">
 						{#if branch.files?.length > 0}
 							<div class="branch-card__files card">
@@ -235,8 +235,8 @@
 							</Button>
 						</div>
 					</div>
-				</div></ScrollableContainer
-			>
+				</div>
+			</ScrollableContainer>
 			<div class="divider-line">
 				<Resizer
 					viewport={rsViewport}

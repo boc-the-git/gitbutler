@@ -1,7 +1,7 @@
 <script lang="ts">
 	import StackingBranchHeader from './StackingBranchHeader.svelte';
-	import StackingNewHeader from './StackingNewHeader.svelte';
-	import PullRequestCard from '../pr/PullRequestCard.svelte';
+	import StackingNewStackCard from './StackingNewStackCard.svelte';
+	import StackingPullRequestHeader from '../pr/StackingPullRequestHeader.svelte';
 	import { BaseBranch } from '$lib/baseBranch/baseBranch';
 	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
 	import { getContextStore } from '$lib/utils/context';
@@ -35,13 +35,14 @@
 	console.log('groupCmmitsByRef', groupCommitsByRef(branches[0]?.commits ?? []));
 </script>
 
-<StackingNewHeader addBranch={openCreateRefModal} />
+<StackingNewStackCard addBranch={openCreateRefModal} />
+<!-- TODO: Add connecting line on background between branches and new branch card -->
 {#each branches as branch}
 	{#each groupCommitsByRef(branch.commits) as group (group.ref)}
 		<div class="commit-group">
 			{#if branch.name}
 				<StackingBranchHeader upstreamName={branch.name} />
-				<PullRequestCard upstreamName={branch.name} />
+				<StackingPullRequestHeader upstreamName={branch.name} />
 			{/if}
 			<StackingCommitList
 				localCommits={group.localCommits}
