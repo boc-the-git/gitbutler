@@ -340,6 +340,7 @@
 	}
 	.header__wrapper--stacking {
 		padding-bottom: unset !important;
+		position: unset;
 
 		& .header__info-wrapper .draggable {
 			height: auto;
