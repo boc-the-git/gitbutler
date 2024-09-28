@@ -42,7 +42,7 @@
 	const project = getContext(Project);
 
 	const baseBranchName = $derived($baseBranch.shortName);
-	const pr = $derived($prMonitor?.pr);
+	const _pr = $derived($prMonitor?.pr);
 
 	// TODO: Get Branch Status
 	const branchType = $state<BranchColor>('integrated');

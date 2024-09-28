@@ -308,19 +308,6 @@
 		top: 12px;
 		padding-bottom: 8px;
 	}
-	.header__wrapper--stacking {
-		padding-bottom: unset !important;
-		position: unset;
-
-		& .header__info-wrapper .draggable {
-			height: auto;
-		}
-	}
-	.header_card--stacking {
-		border-bottom-right-radius: 0px;
-		border-bottom-left-radius: 0px;
-		border-bottom-width: 0px;
-	}
 	.header {
 		z-index: var(--z-lifted);
 		position: relative;
@@ -377,20 +364,6 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		gap: 10px;
-	}
-	/* TODO: Remove me after stacking feature toggle has been removed. */
-	.stacking-header__info {
-		flex: 1;
-		display: flex;
-		overflow: hidden;
-		justify-content: space-between;
-		align-items: center;
-		gap: 10px;
-	}
-	.button-group {
-		display: flex;
-		align-items: center;
 		gap: 10px;
 	}
 	.header__actions {
