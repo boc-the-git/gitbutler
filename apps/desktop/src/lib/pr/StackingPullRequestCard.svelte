@@ -274,7 +274,8 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		border-bottom: 1px solid var(--clr-border-2);
+		border: 1px solid var(--clr-border-2);
+		border-radius: var(--radius-m);
 	}
 
 	.pr-header-title {
