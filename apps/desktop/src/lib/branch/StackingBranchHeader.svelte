@@ -165,8 +165,8 @@
 	<div class="branch-action">
 		<div class="branch-action__line" style:--bg-color={lineColor}></div>
 		<div class="branch-action__body">
-			{#if $pr}
-				<StackingPullRequestCard upstreamName={branch.name} />
+			{#if $pr && branch.upstream?.givenName}
+				<StackingPullRequestCard upstreamName={branch.upstream.givenName} />
 			{:else}
 				<PullRequestButton
 					click={async ({ draft }) => await createPr({ draft })}
