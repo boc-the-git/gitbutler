@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BranchLabel from './BranchLabel.svelte';
 	import StackingStatusIcon from './StackingStatusIcon.svelte';
 	import { getColorFromBranchType, type BranchColor } from './stackingUtils';
 	import { Project } from '$lib/backend/projects';
@@ -20,7 +21,6 @@
 	import { VirtualBranch } from '$lib/vbranches/types';
 	import Button from '@gitbutler/ui/Button.svelte';
 	import type { PullRequest } from '$lib/gitHost/interface/types';
-	import BranchLabel from './BranchLabel.svelte';
 
 	// interface Props {
 	// 	upstreamName: string | undefined;
@@ -145,13 +145,9 @@
 		baseBranchService.fetchFromRemotes();
 	}
 
-	function editDescription() {}
-
 	function editTitle(title: string) {
 		branchController.updateBranchName(branch.id, title);
 	}
-
-	$inspect('BRANCH', branch);
 </script>
 
 <div class="branch-header">
@@ -162,8 +158,8 @@
 			<BranchLabel name={branch.name} onChange={(name) => editTitle(name)} />
 		</div>
 		<div class="branch-info__btns">
-			<Button icon="description" outline type="ghost" color="neutral" onclick={editDescription} />
-			<Button icon="edit-text" outline type="ghost" color="neutral" onclick={editTitle} />
+			<Button icon="description" outline type="ghost" color="neutral" />
+			<Button icon="edit-text" outline type="ghost" color="neutral" />
 		</div>
 	</div>
 	<div class="branch-action">
