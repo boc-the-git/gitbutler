@@ -1,17 +1,20 @@
 import { invoke, listen } from '$lib/backend/ipc';
-import { Lane } from '$lib/lane/types';
+import { Series } from '$lib/stack/types';
 import { VirtualBranches, type VirtualBranch } from '$lib/vbranches/types';
 import { plainToInstance } from 'class-transformer';
 import { writable } from 'svelte/store';
 import type { VirtualBranchService } from '$lib/vbranches/virtualBranch';
 
-export class LaneController {
+// Stack is the top-most organisational level.
+// It used to be called 'Lane', and contains multiple Series (branches).
+export class StackController {
 	private loading = writable(false);
 	readonly error = writable();
 
-	readonly lanes = writable<Lane[] | undefined>(undefined, () => {
+	// Used to be 'branches'
+	readonly series = writable<Series[] | undefined>(undefined, () => {
 		this.refresh();
-		const unsubscribe = this.subscribe((lane) => lane);
+		const unsubscribe = this.subscribe(async (vbranch) => await this.handleVBranchPayload(vbranch));
 		return () => {
 			unsubscribe();
 		};
@@ -25,13 +28,26 @@ export class LaneController {
 	async refresh() {
 		this.loading.set(true);
 		try {
-			await this.listVirtualBranches();
+			await this.handleVBranchPayload(await this.listVirtualBranches());
 		} catch (err: any) {
 			console.error(err);
 			this.error.set(err);
 		} finally {
 			this.loading.set(false);
 		}
+	}
+
+	async handleVBranchPayload(branches: VirtualBranch[]) {
+		console.log(branches);
+		// Handle incoming data from `list_virtual_branches` and return data structure something at least like:
+		// Stack {
+		//  id: string
+		//  series: Series[] // used to be '(Virtual)Branches[]'
+		// }[]
+		//
+
+		this.series.set(branches);
+		this.error.set(undefined);
 	}
 
 	private async listVirtualBranches(): Promise<VirtualBranch[]> {
@@ -49,5 +65,18 @@ export class LaneController {
 		return listen<any>(`project://${this.projectId}/virtual-branches`, (event) =>
 			callback(plainToInstance(VirtualBranches, event.payload).branches)
 		);
+	}
+
+	async createStack() {
+		// Create is happening on the BE, needs new API (`create_stack`?)
+		// 1. pass projectId to `create_stack` invoke fn
+	}
+
+	async pushStack() {
+		// Loop over all series (branches) in the stack (lane) and:
+		// 1. If only 1 branch, don't worry about updating comments, etc.
+		// 2. If more than 1 branch:
+		// 3. Push commits to remote
+		// 4. Update comments
 	}
 }

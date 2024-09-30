@@ -9,10 +9,10 @@
 	import { getGitHostListingService } from '$lib/gitHost/interface/gitHostListingService';
 	import { createGitHostPrMonitorStore } from '$lib/gitHost/interface/gitHostPrMonitor';
 	import { createGitHostPrServiceStore } from '$lib/gitHost/interface/gitHostPrService';
-	import StackingLane from '$lib/lane/StackingLane.svelte';
 	import { persisted } from '$lib/persisted/persisted';
 	import { SETTINGS, type Settings } from '$lib/settings/userSettings';
 	import Resizer from '$lib/shared/Resizer.svelte';
+	import Stack from '$lib/stack/Stack.svelte';
 	import { getContext, getContextStoreBySymbol, createContextStore } from '$lib/utils/context';
 	import {
 		createIntegratedCommitsContextStore,
@@ -112,7 +112,7 @@
 
 <div class="wrapper" data-tauri-drag-region>
 	{#if $stackingFeature}
-		<StackingLane {commitBoxOpen} {isLaneCollapsed} />
+		<Stack {commitBoxOpen} {isLaneCollapsed} />
 	{:else}
 		<BranchCard {commitBoxOpen} {isLaneCollapsed} />
 	{/if}

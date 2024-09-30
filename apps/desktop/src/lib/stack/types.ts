@@ -1,7 +1,8 @@
 import { DetailedCommit } from '$lib/vbranches/types';
 import { Type, Transform } from 'class-transformer';
 
-export class Lane {
+// Return type of `list_virtual_branches().series`
+export class Series {
 	id!: string;
 	@Type(() => DetailedCommit)
 	remoteCommits!: DetailedCommit[];

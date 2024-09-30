@@ -1,6 +1,6 @@
 <script lang="ts">
-	import StackingLaneBranches from './StackingLaneBranches.svelte';
-	import StackingLaneHeader from './StackingLaneHeader.svelte';
+	import StackHeader from './StackHeader.svelte';
+	import StackSeries from './StackSeries.svelte';
 	import EmptyStatePlaceholder from '../components/EmptyStatePlaceholder.svelte';
 	import InfoMessage from '../shared/InfoMessage.svelte';
 	import { PromptService } from '$lib/ai/promptService';
@@ -15,7 +15,6 @@
 	import { getGitHostChecksMonitor } from '$lib/gitHost/interface/gitHostChecksMonitor';
 	import { getGitHostListingService } from '$lib/gitHost/interface/gitHostListingService';
 	import { getGitHostPrMonitor } from '$lib/gitHost/interface/gitHostPrMonitor';
-	import { LaneController } from '$lib/lane/laneController';
 	import { showError } from '$lib/notifications/toasts';
 	import { persisted } from '$lib/persisted/persisted';
 	import { isFailure } from '$lib/result';
@@ -23,6 +22,7 @@
 	import { SETTINGS, type Settings } from '$lib/settings/userSettings';
 	import Resizer from '$lib/shared/Resizer.svelte';
 	import Spacer from '$lib/shared/Spacer.svelte';
+	import { StackController } from '$lib/stack/stackController';
 	import { User } from '$lib/stores/user';
 	import { getContext, getContextStore, getContextStoreBySymbol } from '$lib/utils/context';
 	import { BranchController } from '$lib/vbranches/branchController';
@@ -45,7 +45,7 @@
 	}: { isLaneCollapsed: Writable<boolean>; commitBoxOpen: Writable<boolean> } = $props();
 
 	const branchController = getContext(BranchController);
-	const laneController = getContext(LaneController);
+	const stackController = getContext(StackController);
 	const fileIdSelection = getContext(FileIdSelection);
 	const branchStore = getContextStore(VirtualBranch);
 	const project = getContext(Project);
@@ -135,7 +135,7 @@
 
 {#if $isLaneCollapsed}
 	<div class="collapsed-lane-container">
-		<StackingLaneHeader
+		<StackHeader
 			uncommittedChanges={branch.files.length}
 			onGenerateBranchName={generateBranchName}
 			{isLaneCollapsed}
@@ -158,7 +158,7 @@
 					class="branch-card__contents"
 					data-tauri-drag-region
 				>
-					<StackingLaneHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
+					<StackHeader {isLaneCollapsed} onGenerateBranchName={generateBranchName} />
 					<div class="card-stacking">
 						{#if branch.files?.length > 0}
 							<div class="branch-card__files card">
@@ -218,7 +218,7 @@
 						{/if}
 						<Spacer dotted />
 						<div class="lane-branches">
-							<StackingLaneBranches branches={[branch]} />
+							<StackSeries branches={[branch]} />
 						</div>
 						<!-- TODO: Sticky styling -->
 						<div class="lane-branches__action">
