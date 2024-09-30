@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { autoSelectBranchNameFeature } from '$lib/config/uiFeatureFlags';
 	import { resizeObserver } from '$lib/utils/resizeObserver';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		name: string;
@@ -13,6 +14,10 @@
 	let inputEl: HTMLInputElement;
 	let initialName = name;
 	let inputWidth = $state('');
+
+	onMount(() => {
+		inputEl?.focus();
+	});
 </script>
 
 <span

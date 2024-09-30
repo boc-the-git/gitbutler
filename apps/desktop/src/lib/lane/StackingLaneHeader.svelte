@@ -1,8 +1,8 @@
 <script lang="ts">
-	import ActiveBranchStatus from './ActiveBranchStatus.svelte';
-	import BranchLabel from './BranchLabel.svelte';
-	import BranchLaneContextMenu from './BranchLaneContextMenu.svelte';
-	import DefaultTargetButton from './DefaultTargetButton.svelte';
+	import ActiveBranchStatus from '$lib/branch/ActiveBranchStatus.svelte';
+	import BranchLabel from '$lib/branch/BranchLabel.svelte';
+	import BranchLaneContextMenu from '$lib/branch/BranchLaneContextMenu.svelte';
+	import DefaultTargetButton from '$lib/branch/DefaultTargetButton.svelte';
 	import ContextMenu from '$lib/components/contextmenu/ContextMenu.svelte';
 	import { getContext, getContextStore } from '$lib/utils/context';
 	import { BranchController } from '$lib/vbranches/branchController';

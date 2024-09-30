@@ -1,7 +1,7 @@
 <script lang="ts">
-	import StackingBranchHeader from './StackingBranchHeader.svelte';
-	import StackingNewStackCard from './StackingNewStackCard.svelte';
 	import { BaseBranch } from '$lib/baseBranch/baseBranch';
+	import StackingBranchHeader from '$lib/branch/StackingBranchHeader.svelte';
+	import StackingNewStackCard from '$lib/branch/StackingNewStackCard.svelte';
 	import StackingCommitList from '$lib/commit/StackingCommitList.svelte';
 	import { getContextStore } from '$lib/utils/context';
 	import { groupCommitsByRef } from '$lib/vbranches/commitGroups';
