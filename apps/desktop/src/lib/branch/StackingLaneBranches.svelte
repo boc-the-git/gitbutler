@@ -31,14 +31,14 @@
 		e.stopPropagation();
 		createRefModal.show(commit);
 	}
-	console.log('groupCmmitsByRef', groupCommitsByRef(branches[0]?.commits ?? []));
+	console.log('groupCommitsByRef', groupCommitsByRef(branches[0]?.commits ?? []));
 </script>
 
 <StackingNewStackCard addBranch={openCreateRefModal} />
-<!-- TODO: Add connecting line on background between branches and new branch card -->
+<!-- TODO: Add connecting line on background between NewStackCard above and branches below -->
 {#each branches as branch}
 	{#each groupCommitsByRef(branch.commits) as group (group.ref)}
-		<div class="commit-group">
+		<div class="branch-group">
 			<StackingBranchHeader />
 			<StackingCommitList
 				localCommits={group.localCommits}
@@ -54,7 +54,7 @@
 {/each}
 
 <style>
-	.commit-group {
+	.branch-group {
 		border: 1px solid var(--clr-border-2);
 		border-radius: var(--radius-m);
 		background: var(--clr-bg-1);

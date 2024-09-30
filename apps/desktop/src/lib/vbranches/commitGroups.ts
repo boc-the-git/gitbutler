@@ -20,6 +20,9 @@ class CommitGroup {
 	}
 
 	get branchName() {
+		// TODO: Are we always assuming 'origin' upstream name? Do we want the
+		// upstream name in the StackingBranchHeader to be dynamic? I know the upstreams
+		// can have `/` character so parsing it out isn't so simple..
 		return this.ref?.replace('refs/remotes/origin/', '');
 	}
 }

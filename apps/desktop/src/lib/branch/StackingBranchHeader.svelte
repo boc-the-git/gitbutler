@@ -20,6 +20,7 @@
 	import { VirtualBranch } from '$lib/vbranches/types';
 	import Button from '@gitbutler/ui/Button.svelte';
 	import type { PullRequest } from '$lib/gitHost/interface/types';
+	import BranchLabel from './BranchLabel.svelte';
 
 	// interface Props {
 	// 	upstreamName: string | undefined;
@@ -42,7 +43,7 @@
 	const project = getContext(Project);
 
 	const baseBranchName = $derived($baseBranch.shortName);
-	const _pr = $derived($prMonitor?.pr);
+	const pr = $derived($prMonitor?.pr);
 
 	// TODO: Get Branch Status
 	const branchType = $state<BranchColor>('integrated');
@@ -143,24 +144,33 @@
 		await $gitListService?.refresh();
 		baseBranchService.fetchFromRemotes();
 	}
+
+	function editDescription() {}
+
+	function editTitle(title: string) {
+		branchController.updateBranchName(branch.id, title);
+	}
+
+	$inspect('BRANCH', branch);
 </script>
 
 <div class="branch-header">
 	<div class="branch-info">
 		<StackingStatusIcon icon="tick-small" color={branchType} gap={false} lineTop />
 		<div class="text-14 text-bold branch-info__name">
-			<span class="remote-name">origin/</span>{branch.upstream?.givenName ?? branch.name}
+			<span class="remote-name">origin/</span>
+			<BranchLabel name={branch.name} onChange={(name) => editTitle(name)} />
 		</div>
 		<div class="branch-info__btns">
-			<Button icon="description" outline type="ghost" color="neutral" />
-			<Button icon="edit-text" outline type="ghost" color="neutral" />
+			<Button icon="description" outline type="ghost" color="neutral" onclick={editDescription} />
+			<Button icon="edit-text" outline type="ghost" color="neutral" onclick={editTitle} />
 		</div>
 	</div>
 	<div class="branch-action">
 		<div class="branch-action__line" style:--bg-color={lineColor}></div>
 		<div class="branch-action__body">
-			{#if branch.upstream?.givenName}
-				<StackingPullRequestCard upstreamName={branch.upstream.givenName} />
+			{#if $pr}
+				<StackingPullRequestCard upstreamName={branch.name} />
 			{:else}
 				<PullRequestButton
 					click={async ({ draft }) => await createPr({ draft })}
@@ -200,7 +210,7 @@
 
 		.remote-name {
 			color: var(--clr-scale-ntrl-60);
-			padding-right: 2px;
+			margin-right: -3px;
 		}
 	}
 
