@@ -7,6 +7,7 @@ import { CommitService } from '$lib/commits/service';
 import { ReorderDropzoneManagerFactory } from '$lib/dragging/reorderDropzoneManager';
 import { FetchSignal } from '$lib/fetchSignal/fetchSignal.js';
 import { HistoryService } from '$lib/history/history';
+import { LaneController } from '$lib/lane/laneController';
 import { ProjectMetrics } from '$lib/metrics/projectMetrics';
 import { ModeService } from '$lib/modes/service';
 import { RemoteBranchService } from '$lib/stores/remoteBranches';
@@ -78,6 +79,8 @@ export const load: LayoutLoad = async ({ params, parent }) => {
 		baseBranchService
 	);
 
+	const laneController = new LaneController(projectId, vbranchService);
+
 	const branchDragActionsFactory = new BranchDragActionsFactory(branchController);
 	const commitDragActionsFactory = new CommitDragActionsFactory(branchController, project);
 	const reorderDropzoneManagerFactory = new ReorderDropzoneManagerFactory(branchController);
@@ -90,6 +93,7 @@ export const load: LayoutLoad = async ({ params, parent }) => {
 		baseBranchService,
 		commitService,
 		branchController,
+		laneController,
 		historyService,
 		projectId,
 		project,

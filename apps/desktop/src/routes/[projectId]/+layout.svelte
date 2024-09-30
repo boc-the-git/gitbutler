@@ -19,6 +19,7 @@
 	import { createGitHostListingServiceStore } from '$lib/gitHost/interface/gitHostListingService';
 	import History from '$lib/history/History.svelte';
 	import { HistoryService } from '$lib/history/history';
+	import { LaneController } from '$lib/lane/laneController';
 	import MetricsReporter from '$lib/metrics/MetricsReporter.svelte';
 	import { ModeService } from '$lib/modes/service';
 	import Navigation from '$lib/navigation/Navigation.svelte';
@@ -42,6 +43,7 @@
 
 	const {
 		vbranchService,
+		laneController,
 		project,
 		projectId,
 		projectService,
@@ -61,11 +63,13 @@
 	const accessToken = $derived($user?.github_access_token);
 	const baseError = $derived(baseBranchService.error);
 	const projectError = $derived(projectService.error);
+	const laneError = $derived(laneController.error);
 
 	$effect.pre(() => {
 		setContext(HistoryService, data.historyService);
 		setContext(VirtualBranchService, data.vbranchService);
 		setContext(BranchController, data.branchController);
+		setContext(LaneController, data.laneController);
 		setContext(BaseBranchService, data.baseBranchService);
 		setContext(CommitService, data.commitService);
 		setContext(BaseBranch, baseBranch);
@@ -193,6 +197,8 @@
 		<ProblemLoadingRepo error={$branchesError} />
 	{:else if $projectError}
 		<ProblemLoadingRepo error={$projectError} />
+	{:else if $laneError}
+		<ProblemLoadingRepo error={$laneError} />
 	{:else if $baseBranch}
 		{#if $mode?.type === 'OpenWorkspace' || $mode?.type === 'Edit'}
 			<div class="view-wrap" role="group" ondragover={(e) => e.preventDefault()}>
