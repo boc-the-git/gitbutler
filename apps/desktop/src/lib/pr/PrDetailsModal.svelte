@@ -129,7 +129,7 @@
 
 	// Fetch PR template content
 	$effect(() => {
-		if ($prService && pullRequestTemplateBody === undefined && prTemplatePath) {
+		if (modal?.imports.open && $prService && pullRequestTemplateBody === undefined && prTemplatePath) {
 			$prService.pullRequestTemplateContent(prTemplatePath, project.id).then((template) => {
 				pullRequestTemplateBody = template;
 			});
@@ -358,7 +358,7 @@
 						placeholder="PR title"
 						value={actualTitle}
 						readonly={!isEditing || isPreviewOnly}
-						on:change={(e) => {
+						on:input={(e) => {
 							inputTitle = e.detail;
 						}}
 					/>
